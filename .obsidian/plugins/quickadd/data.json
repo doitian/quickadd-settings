@@ -1,0 +1,594 @@
+{
+  "choices": [
+    {
+      "id": "2fc70047-bb78-4801-906e-1a62deb8daf0",
+      "name": "New…",
+      "type": "Multi",
+      "command": true,
+      "choices": [
+        {
+          "id": "d8a5f612-6c7f-49d1-9d2c-4ccc0f535655",
+          "name": "New Paralet",
+          "type": "Macro",
+          "command": true,
+          "macroId": "07d0251b-2791-404d-945c-4a2782f7e518"
+        },
+        {
+          "id": "d1b64f5d-1df8-4b44-b4c0-dc8632f5b1b1",
+          "name": "New Docklet",
+          "type": "Template",
+          "command": true,
+          "templatePath": "shore/templates/tpl-zettel.md",
+          "fileNameFormat": {
+            "enabled": true,
+            "format": "{{DATE:YYYYMMDDHHmm}}"
+          },
+          "folder": {
+            "enabled": true,
+            "folders": [
+              "dock"
+            ],
+            "chooseWhenCreatingNote": false,
+            "createInSameFolderAsActiveFile": false
+          },
+          "appendLink": false,
+          "incrementFileName": true,
+          "openFileInNewTab": {
+            "enabled": false,
+            "direction": "vertical",
+            "focus": true
+          },
+          "openFile": true,
+          "openFileInMode": "default"
+        },
+        {
+          "id": "6967afe6-dd3b-49f6-9224-64bbf41939e5",
+          "name": "New File Here",
+          "type": "Template",
+          "command": true,
+          "templatePath": "shore/templates/tpl-zettel.md",
+          "fileNameFormat": {
+            "enabled": true,
+            "format": "{{DATE:YYYYMMDDHHmm}}"
+          },
+          "folder": {
+            "enabled": true,
+            "folders": [],
+            "chooseWhenCreatingNote": false,
+            "createInSameFolderAsActiveFile": true
+          },
+          "appendLink": false,
+          "incrementFileName": true,
+          "openFileInNewTab": {
+            "enabled": false,
+            "direction": "vertical",
+            "focus": true
+          },
+          "openFile": true,
+          "openFileInMode": "default"
+        },
+        {
+          "id": "9cc2e3be-f271-4090-aa1d-677b6d498b2f",
+          "name": "New Child",
+          "type": "Template",
+          "command": true,
+          "templatePath": "shore/quickadd/qa-new-file.md",
+          "fileNameFormat": {
+            "enabled": true,
+            "format": "{{VALUE}}"
+          },
+          "folder": {
+            "enabled": true,
+            "folders": [],
+            "chooseWhenCreatingNote": false,
+            "createInSameFolderAsActiveFile": true
+          },
+          "appendLink": true,
+          "incrementFileName": true,
+          "openFileInNewTab": {
+            "enabled": false,
+            "direction": "vertical",
+            "focus": true
+          },
+          "openFile": true,
+          "openFileInMode": "default"
+        },
+        {
+          "id": "8f62c489-06cf-4880-8a05-2e0f16c7b509",
+          "name": "New Action",
+          "type": "Capture",
+          "command": true,
+          "appendLink": false,
+          "captureTo": "",
+          "captureToActiveFile": true,
+          "createFileIfItDoesntExist": {
+            "enabled": false,
+            "createWithTemplate": false,
+            "template": ""
+          },
+          "format": {
+            "enabled": false,
+            "format": ""
+          },
+          "insertAfter": {
+            "enabled": true,
+            "after": "## Actions",
+            "insertAtEnd": true,
+            "createIfNotFound": true,
+            "createIfNotFoundLocation": "bottom"
+          },
+          "prepend": true,
+          "task": true,
+          "openFileInNewTab": {
+            "enabled": false,
+            "direction": "vertical",
+            "focus": true
+          },
+          "openFile": true,
+          "openFileInMode": "default"
+        },
+        {
+          "id": "28f072a6-5ce9-47c5-b759-0dcfa7379586",
+          "name": "New Journal",
+          "type": "Capture",
+          "command": true,
+          "appendLink": false,
+          "captureTo": "journal/Journal {{DATE:YYYY-MM-DD}}.md",
+          "captureToActiveFile": false,
+          "createFileIfItDoesntExist": {
+            "enabled": true,
+            "createWithTemplate": true,
+            "template": "shore/templates/tpl-journal-new.md"
+          },
+          "format": {
+            "enabled": true,
+            "format": "\n### {{DATE:HH:mm}}\n\n{{MVALUE}}"
+          },
+          "insertAfter": {
+            "enabled": false,
+            "after": "",
+            "insertAtEnd": false,
+            "createIfNotFound": true,
+            "createIfNotFoundLocation": "bottom"
+          },
+          "prepend": true,
+          "task": false,
+          "openFileInNewTab": {
+            "enabled": false,
+            "direction": "vertical",
+            "focus": true
+          },
+          "openFile": true,
+          "openFileInMode": "preview"
+        }
+      ],
+      "collapsed": false
+    },
+    {
+      "id": "ffbdc0a7-db3f-47b0-b53e-feb0c2e9a1f7",
+      "name": "Edit…",
+      "type": "Multi",
+      "command": true,
+      "choices": [
+        {
+          "id": "24a59cbd-70db-4a9d-8b45-ae364015e38a",
+          "name": "Cycle Pane Next",
+          "type": "Macro",
+          "command": true,
+          "macroId": "c82b3bf1-829c-4be7-b255-b86a3ad665cd"
+        },
+        {
+          "id": "acbebf41-1c62-4983-92e8-83de5c55b412",
+          "name": "Cycle Pane Prev",
+          "type": "Macro",
+          "command": true,
+          "macroId": "7966b94b-eaa7-4fe7-94b6-9194abcc5487"
+        },
+        {
+          "id": "b6285484-0be1-458a-bc3b-6ab1788c782c",
+          "name": "Edit Alternative File",
+          "type": "Macro",
+          "command": true,
+          "macroId": "128a62da-8112-4385-a328-6cb3a69e9170"
+        },
+        {
+          "id": "ec1c6290-f36b-44a9-bf83-440077277949",
+          "name": "Edit URI Component",
+          "type": "Macro",
+          "command": true,
+          "macroId": "2f72e781-0ce8-44aa-abee-f6577730ddaf"
+        },
+        {
+          "id": "2feb13d4-c9ec-4826-b43f-02b33251789a",
+          "name": "Expand Snippet",
+          "type": "Macro",
+          "command": true,
+          "macroId": "2d83cfcd-5d2b-45bd-bfc3-38f2324c9769"
+        },
+        {
+          "id": "39de731f-f2c7-4494-8c84-9855da33b27c",
+          "name": "Find Files Here",
+          "type": "Macro",
+          "command": true,
+          "macroId": "b22141a3-d285-4c4b-b903-1dd61bb57a46"
+        },
+        {
+          "id": "e30520a5-a0bb-466b-80a3-57b2ebb9ce55",
+          "name": "Open Journal",
+          "type": "Macro",
+          "command": true,
+          "macroId": "3b8ab32b-4a03-4531-913d-c82f3a303ae2"
+        },
+        {
+          "id": "de21270f-41ab-4459-9f1c-ad6b8ca23ec4",
+          "name": "Open Recent Updated Files",
+          "type": "Macro",
+          "command": true,
+          "macroId": "279f272d-faa9-41d3-8b51-597f9587378b"
+        },
+        {
+          "id": "951229bf-39c3-4bc5-9c7e-79e35bf7ed20",
+          "name": "Go to Next Fold",
+          "type": "Macro",
+          "command": true,
+          "macroId": "ce9020b7-159e-41eb-abae-3d676d69969b"
+        },
+        {
+          "id": "cfb3a2dc-bcd0-49cc-ae29-aad47a895b7a",
+          "name": "Go to Prev Fold",
+          "type": "Macro",
+          "command": true,
+          "macroId": "4e2b3daf-ef09-4aa7-9832-ca388e0d10b7"
+        }
+      ],
+      "collapsed": false
+    },
+    {
+      "id": "3816f711-b04c-43e5-8be0-62291e4ee459",
+      "name": "Automation…",
+      "type": "Multi",
+      "command": true,
+      "choices": [
+        {
+          "id": "53843819-9e6e-4a50-bc46-03c7773e33c8",
+          "name": "DataViewX All",
+          "type": "Macro",
+          "command": true,
+          "macroId": "b2220e16-445e-4d7b-81ca-5ed0754672f9"
+        },
+        {
+          "id": "6c8e6d04-477c-4b88-a6ab-17cc771eba74",
+          "name": "DataViewX This",
+          "type": "Macro",
+          "command": true,
+          "macroId": "15f062ae-c02a-4610-86c5-0f4d9ad2b56f"
+        },
+        {
+          "id": "8d0461e9-3be3-4d14-83b6-da2f7118a802",
+          "name": "Insert Todoist Tasks",
+          "type": "Macro",
+          "command": true,
+          "macroId": "28213544-b4f1-4640-a577-0dcd1da8ebba"
+        },
+        {
+          "id": "a97c3082-e8a0-4b5d-800f-11bd1477c385",
+          "name": "Insert Wikipedia Page",
+          "type": "Macro",
+          "command": true,
+          "macroId": "83c44196-6e09-49dc-b44c-040bb5fc0bc6"
+        },
+        {
+          "id": "02bfff99-8e86-407d-99b1-5042a232c003",
+          "name": "Markdownify",
+          "type": "Macro",
+          "command": true,
+          "macroId": "40d3d40b-18fe-46b4-8df6-6f2654b4f14b"
+        },
+        {
+          "id": "f80da541-d555-4a5e-9e1f-53c48ed52c1e",
+          "name": "Run JS Block",
+          "type": "Macro",
+          "command": true,
+          "macroId": "f5e0c343-824d-4d14-9cd9-720731e35676"
+        }
+      ],
+      "collapsed": false
+    },
+    {
+      "id": "f35f48de-5323-42a9-bbb2-93a6534d4d3d",
+      "name": "Misc",
+      "type": "Multi",
+      "command": false,
+      "choices": [
+        {
+          "id": "602b3077-d840-46bb-bde2-9a61151c1bb1",
+          "name": "Refresh Toolbar Icons",
+          "type": "Macro",
+          "command": false,
+          "macroId": null
+        }
+      ],
+      "collapsed": true
+    }
+  ],
+  "macros": [
+    {
+      "name": "dataviewx-this",
+      "id": "15f062ae-c02a-4610-86c5-0f4d9ad2b56f",
+      "commands": [
+        {
+          "name": "dataviewx-this",
+          "type": "UserScript",
+          "id": "1794c15a-55e3-46b2-b548-718125e0d6b0",
+          "path": "shore/quickadd/dataviewx-this.js",
+          "settings": {}
+        }
+      ],
+      "runOnStartup": false
+    },
+    {
+      "name": "dataviewx-all",
+      "id": "b2220e16-445e-4d7b-81ca-5ed0754672f9",
+      "commands": [
+        {
+          "name": "dataviewx-all",
+          "type": "UserScript",
+          "id": "f8890b95-b0ac-4767-9cd1-0666d45104fc",
+          "path": "shore/quickadd/dataviewx-all.js",
+          "settings": {}
+        }
+      ],
+      "runOnStartup": false
+    },
+    {
+      "name": "insert-todoist-tasks",
+      "id": "28213544-b4f1-4640-a577-0dcd1da8ebba",
+      "commands": [
+        {
+          "name": "insert-todoist-tasks",
+          "type": "UserScript",
+          "id": "3135fc30-a248-402d-aece-9c72ea467866",
+          "path": "shore/quickadd/insert-todoist-tasks.js",
+          "settings": {
+          }
+        }
+      ],
+      "runOnStartup": false
+    },
+    {
+      "name": "edit-uri-component",
+      "id": "2f72e781-0ce8-44aa-abee-f6577730ddaf",
+      "commands": [
+        {
+          "name": "edit-uri-component",
+          "type": "UserScript",
+          "id": "a9777fc8-ecc5-4825-9029-f825c20f5cf8",
+          "path": "shore/quickadd/edit-uri-component.js",
+          "settings": {}
+        }
+      ],
+      "runOnStartup": false
+    },
+    {
+      "name": "run-js-block",
+      "id": "f5e0c343-824d-4d14-9cd9-720731e35676",
+      "commands": [
+        {
+          "name": "run-js-block",
+          "type": "UserScript",
+          "id": "560d205a-cf74-4f7d-b36b-a939476afa86",
+          "path": "shore/quickadd/run-js-block.js",
+          "settings": {}
+        }
+      ],
+      "runOnStartup": false
+    },
+    {
+      "name": "markdownify",
+      "id": "40d3d40b-18fe-46b4-8df6-6f2654b4f14b",
+      "commands": [
+        {
+          "name": "markdownify",
+          "type": "UserScript",
+          "id": "d52e175c-99ec-48eb-8d96-cdc2ee54e554",
+          "path": "shore/quickadd/markdownify.js",
+          "settings": {}
+        }
+      ],
+      "runOnStartup": false
+    },
+    {
+      "name": "new-paralet",
+      "id": "07d0251b-2791-404d-945c-4a2782f7e518",
+      "commands": [
+        {
+          "name": "new-paralet",
+          "type": "UserScript",
+          "id": "f2041718-232d-453b-9319-0e1ae2d685e8",
+          "path": "shore/quickadd/new-paralet.js",
+          "settings": {}
+        }
+      ],
+      "runOnStartup": false
+    },
+    {
+      "name": "find-files-here",
+      "id": "b22141a3-d285-4c4b-b903-1dd61bb57a46",
+      "commands": [
+        {
+          "name": "find-files-here",
+          "type": "UserScript",
+          "id": "47ec80a0-a7eb-4380-b34d-4e28d25b637a",
+          "path": "shore/quickadd/find-files-here.js",
+          "settings": {}
+        }
+      ],
+      "runOnStartup": false
+    },
+    {
+      "name": "expand-snippet",
+      "id": "2d83cfcd-5d2b-45bd-bfc3-38f2324c9769",
+      "commands": [
+        {
+          "name": "expand-snippet",
+          "type": "UserScript",
+          "id": "35961aef-cff7-4d7d-860d-a37481a60224",
+          "path": "shore/quickadd/expand-snippet.js",
+          "settings": {
+            "Fallback Command": "editor:follow-link"
+          }
+        }
+      ],
+      "runOnStartup": false
+    },
+    {
+      "name": "cycle-pane-next",
+      "id": "c82b3bf1-829c-4be7-b255-b86a3ad665cd",
+      "commands": [
+        {
+          "name": "cycle-pane",
+          "type": "UserScript",
+          "id": "5e9ead47-c6a4-4c07-9187-b2cae853f850",
+          "path": "shore/quickadd/cycle-pane.js",
+          "settings": {
+            "Cycle Panel Prev": false
+          }
+        }
+      ],
+      "runOnStartup": false
+    },
+    {
+      "name": "cycle-pane-prev",
+      "id": "7966b94b-eaa7-4fe7-94b6-9194abcc5487",
+      "commands": [
+        {
+          "name": "cycle-pane",
+          "type": "UserScript",
+          "id": "6f5a8b09-73c9-45e1-8826-0f0189970b1c",
+          "path": "shore/quickadd/cycle-pane.js",
+          "settings": {
+            "Cycle Panel Prev": true
+          }
+        }
+      ],
+      "runOnStartup": false
+    },
+    {
+      "name": "vimrc",
+      "id": "1a837f7d-9e17-4041-b939-604809072a2c",
+      "commands": [
+        {
+          "name": "vimrc",
+          "type": "UserScript",
+          "id": "4fa6647a-6858-4972-be16-e0734842abe0",
+          "path": "shore/quickadd/vimrc.js",
+          "settings": {}
+        }
+      ],
+      "runOnStartup": true
+    },
+    {
+      "name": "go-fold-next",
+      "id": "ce9020b7-159e-41eb-abae-3d676d69969b",
+      "commands": [
+        {
+          "name": "go-fold",
+          "type": "UserScript",
+          "id": "b98611b3-ea4b-4c15-8d69-c305c0acdf3c",
+          "path": "shore/quickadd/go-fold.js",
+          "settings": {
+            "Go Fold Prev": false
+          }
+        }
+      ],
+      "runOnStartup": false
+    },
+    {
+      "name": "go-fold-prev",
+      "id": "4e2b3daf-ef09-4aa7-9832-ca388e0d10b7",
+      "commands": [
+        {
+          "name": "go-fold",
+          "type": "UserScript",
+          "id": "c81dffed-17eb-46a8-af26-c946cf3a900d",
+          "path": "shore/quickadd/go-fold.js",
+          "settings": {
+            "Go Fold Prev": true
+          }
+        }
+      ],
+      "runOnStartup": false
+    },
+    {
+      "name": "edit-alternative-file",
+      "id": "128a62da-8112-4385-a328-6cb3a69e9170",
+      "commands": [
+        {
+          "name": "edit-alternative-file",
+          "type": "UserScript",
+          "id": "62814d3d-52e1-4660-980b-30fed34f84f6",
+          "path": "shore/quickadd/edit-alternative-file.js",
+          "settings": {}
+        }
+      ],
+      "runOnStartup": false
+    },
+    {
+      "name": "set-mobile-toolbar-icons",
+      "id": "f056561b-bfbf-465f-8a74-dcf98472c7c9",
+      "commands": [
+        {
+          "name": "set-mobile-toolbar-icons",
+          "type": "UserScript",
+          "id": "a4f9948c-9415-4b45-baed-2b7cacaa11ed",
+          "path": "shore/quickadd/set-mobile-toolbar-icons.js",
+          "settings": {}
+        }
+      ],
+      "runOnStartup": true
+    },
+    {
+      "name": "open-recent-updated-files",
+      "id": "279f272d-faa9-41d3-8b51-597f9587378b",
+      "commands": [
+        {
+          "name": "open-recent-updated-files",
+          "type": "UserScript",
+          "id": "7c4fef12-7a7a-484d-959d-82b1e93c53d5",
+          "path": "shore/quickadd/open-recent-updated-files.js",
+          "settings": {}
+        }
+      ],
+      "runOnStartup": false
+    },
+    {
+      "name": "insert-wikipedia-page",
+      "id": "83c44196-6e09-49dc-b44c-040bb5fc0bc6",
+      "commands": [
+        {
+          "name": "insert-wikipedia-page",
+          "type": "UserScript",
+          "id": "478bfc77-5a9d-43a9-a56b-257f77f48101",
+          "path": "shore/quickadd/insert-wikipedia-page.js",
+          "settings": {}
+        }
+      ],
+      "runOnStartup": false
+    },
+    {
+      "name": "open-journal",
+      "id": "3b8ab32b-4a03-4531-913d-c82f3a303ae2",
+      "commands": [
+        {
+          "name": "open-journal",
+          "type": "UserScript",
+          "id": "2ef5daf6-1f84-427c-982d-91d46c926882",
+          "path": "shore/quickadd/open-journal.js",
+          "settings": {}
+        }
+      ],
+      "runOnStartup": false
+    }
+  ],
+  "inputPrompt": "single-line"
+}
