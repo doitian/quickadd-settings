@@ -278,6 +278,13 @@
           "macroId": "83c44196-6e09-49dc-b44c-040bb5fc0bc6"
         },
         {
+          "id": "f8cd0f8a-1d2d-4fdd-8a7d-f493683bc2fd",
+          "name": "Lookup",
+          "type": "Macro",
+          "command": true,
+          "macroId": "9593228c-a9bb-4b89-b2d7-d04cff0bfd69"
+        },
+        {
           "id": "02bfff99-8e86-407d-99b1-5042a232c003",
           "name": "Markdownify",
           "type": "Macro",
@@ -585,6 +592,21 @@
           "id": "2ef5daf6-1f84-427c-982d-91d46c926882",
           "path": "shore/quickadd/open-journal.js",
           "settings": {}
+        }
+      ],
+      "runOnStartup": false
+    },
+    {
+      "name": "lookup",
+      "id": "9593228c-a9bb-4b89-b2d7-d04cff0bfd69",
+      "commands": [
+        {
+          "name": "lookup",
+          "type": "UserScript",
+          "id": "096cf726-1e8a-4d74-a6e8-e27dad9df0f3",
+          "path": "shore/quickadd/lookup.js",
+          "settings": {
+          }
         }
       ],
       "runOnStartup": false

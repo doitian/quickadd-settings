@@ -32,11 +32,12 @@ This is how QuickAdd describes itself. Indeed, it is also a framework to extend 
 - `run-js-block.js`: Execute a JavaScript code block under cursor.
 - `set-mobile-toolbar-icons.js`: Set icons for custom commands.
 - `vimrc.js`: Extend the Vim mode by adding ex commands and key mappings.
+- `lookup.js`: Generate word definition via [Dictionary API](https://dictionaryapi.com/).
 
 ```bash
 :
 
 rsync -avz --delete "$HOME/Dropbox/Brain/shore/quickadd/" "./shore/quickadd/"
-sed -e '/"Todoist Token":/d' "$HOME/Dropbox/Brain/.obsidian/plugins/quickadd/data.json" > "./.obsidian/plugins/quickadd/data.json"
+sed -e '/"Todoist Token":/d' -e '/"Dictionary API Key":/d' -e '/"Word Prefix":/d' "$HOME/Dropbox/Brain/.obsidian/plugins/quickadd/data.json" > "./.obsidian/plugins/quickadd/data.json"
 
 # vim: ft=markdown
