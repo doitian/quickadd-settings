@@ -16,43 +16,50 @@ function getFileName(fileName) {
     .replace(/[- .]+$/, "");
 }
 
-async function cacheImport(name, url) {
+async function cacheImport(name, url, importDefault = true) {
   if (!(name in window)) {
-    window[name] = (await import(url)).default;
+    const module = await import(url);
+    window[name] = importDefault ? module.default : module;
   }
 
   return window[name];
 }
 
 async function start({ app, quickAddApi }) {
-  const url = (
-    await quickAddApi.inputPrompt(
-      "URL",
-      "%.html",
-      "https://thebitcoinmanual.com/articles/what-is-psbt/"
-    )
-  ).trim();
+  const url = (await quickAddApi.inputPrompt("URL", "%.html")).trim();
 
   const Turndown = await cacheImport(
     "Turndown",
     "https://unpkg.com/turndown@6.0.0?module"
   );
-  const Readability = await cache(
+  const TurndownPluginGfm = await cacheImport(
+    "TurndownPluginGfm",
+    "https://unpkg.com/turndown-plugin-gfm@1.0.2?module",
+    false
+  );
+  const Readability = await cacheImport(
     "Readability",
     "https://unpkg.com/@tehshrike/readability@0.2.0"
   );
 
   const document =
     url === "" ? await getVaultDocument(app) : await fetchDocument(url);
-  const { title, byline, content } = new Readability(document).parse();
+  const { title, byline, content } = new Readability(document).parse() || {
+    title: document.title,
+    byline: null,
+    content: document.body,
+  };
 
-  const markdownBody = new Turndown({
+  const turndownService = new Turndown({
     headingStyle: "atx",
     hr: "---",
     bulletListMarker: "-",
     codeBlockStyle: "fenced",
     emDelimiter: "*",
-  }).turndown(content);
+  });
+  turndownService.use(TurndownPluginGfm.gfm);
+
+  const markdownBody = turndownService.turndown(content);
 
   const metadata = {
     Created: `[[${new Date().toISOString().split("T")[0]}]]`,
@@ -66,13 +73,18 @@ async function start({ app, quickAddApi }) {
   if (url !== "") {
     const host = url.split("://", 2)[1].split("/", 1)[0];
     metadata["URL"] = `[${host}](${url})`;
-    metadata["Website"] = `[[${host}]]`;
+    metadata["Host"] = `[[${host}]]`;
   }
   if (byline !== null && byline !== undefined) {
     metadata["Author"] = `[[${byline}]]`;
   }
 
-  const fileContent = [formatMetadata(metadata), "", markdownBody].join("\n");
+  const fileContent = [
+    "## Metadata\n",
+    formatMetadata(metadata),
+    "\n## Synopsis\n",
+    markdownBody,
+  ].join("\n");
 
   if (url === "") {
     await app.vault.append(app.workspace.getActiveFile(), fileContent);

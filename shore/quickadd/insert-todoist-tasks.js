@@ -78,7 +78,7 @@ async function start(params, settings) {
           `- [ ]${scheduled(task)} #p${priority} ${task.content}${formatLabels(
             task,
             labels
-          )} [«↪»](${task.url}) ^todoist-${id}`
+          )} [«↪»](${task.url}) ^td-${id}`
         );
       }
     } else {
@@ -92,7 +92,7 @@ async function start(params, settings) {
 
     if (task.description !== "") {
       lines.push("");
-      lines.push("    " + task.description.replace(/\r*\n/, "$&    "));
+      lines.push("    " + task.description.replace(/\r*\n/g, "$&    "));
       lines.push("");
     }
   }

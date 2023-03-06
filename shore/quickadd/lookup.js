@@ -309,12 +309,12 @@ async function format(app, explanation, settings) {
 async function start(params, settings) {
   const { app, quickAddApi } = params;
 
-  // const wordInput = await quickAddApi.inputPrompt("lookup");
-  // if (wordInput === null || wordInput.trim() === "") {
-  //   return;
-  // }
-  // const word = wordInput.trim();
-  const word = "friend";
+  const wordInput = await quickAddApi.inputPrompt("lookup");
+  if (wordInput === null || wordInput.trim() === "") {
+    return;
+  }
+  const word = wordInput.trim();
+  // const word = "friend";
 
   let wordPath = `robot/Vocabulary/${settings[WORD_PREFIX_OPTION]}${word}.md`;
   const wordExists = await app.vault.adapter.exists(wordPath);
@@ -327,16 +327,17 @@ async function start(params, settings) {
     wordPath = `robot/Vocabulary/${settings[WORD_PREFIX_OPTION]}${stem}.md`;
     await app.vault.create(wordPath, lines.join("\n"));
   } else {
-    const [stem, lines] = await format(
-      app,
-      await lookup(word, settings),
-      settings
-    );
-    wordPath = `robot/Vocabulary/${settings[WORD_PREFIX_OPTION]}${stem}.md`;
-    await app.vault.modify(
-      app.vault.getAbstractFileByPath(wordPath),
-      lines.join("\n")
-    );
+    // Updates file content for debugging
+    // const [stem, lines] = await format(
+    //   app,
+    //   await lookup(word, settings),
+    //   settings
+    // );
+    // wordPath = `robot/Vocabulary/${settings[WORD_PREFIX_OPTION]}${stem}.md`;
+    // await app.vault.modify(
+    //   app.vault.getAbstractFileByPath(wordPath),
+    //   lines.join("\n")
+    // );
   }
 
   const wordFile = app.vault.getAbstractFileByPath(wordPath);

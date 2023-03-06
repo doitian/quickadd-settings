@@ -32,14 +32,15 @@
             "createInSameFolderAsActiveFile": false
           },
           "appendLink": false,
-          "incrementFileName": true,
           "openFileInNewTab": {
             "enabled": false,
             "direction": "vertical",
             "focus": true
           },
           "openFile": true,
-          "openFileInMode": "default"
+          "openFileInMode": "default",
+          "setFileExistsBehavior": true,
+          "fileExistsMode": "Increment the file name"
         },
         {
           "id": "6967afe6-dd3b-49f6-9224-64bbf41939e5",
@@ -58,21 +59,22 @@
             "createInSameFolderAsActiveFile": true
           },
           "appendLink": false,
-          "incrementFileName": true,
           "openFileInNewTab": {
             "enabled": false,
             "direction": "vertical",
             "focus": true
           },
           "openFile": true,
-          "openFileInMode": "default"
+          "openFileInMode": "default",
+          "setFileExistsBehavior": true,
+          "fileExistsMode": "Increment the file name"
         },
         {
           "id": "9cc2e3be-f271-4090-aa1d-677b6d498b2f",
           "name": "New Child",
           "type": "Template",
           "command": true,
-          "templatePath": "shore/quickadd/qa-new-file.md",
+          "templatePath": "shore/templates/qa-new-file.md",
           "fileNameFormat": {
             "enabled": true,
             "format": "{{VALUE}}"
@@ -84,14 +86,15 @@
             "createInSameFolderAsActiveFile": true
           },
           "appendLink": true,
-          "incrementFileName": true,
           "openFileInNewTab": {
             "enabled": false,
             "direction": "vertical",
             "focus": true
           },
           "openFile": true,
-          "openFileInMode": "default"
+          "openFileInMode": "default",
+          "setFileExistsBehavior": true,
+          "fileExistsMode": "Increment the file name"
         },
         {
           "id": "8f62c489-06cf-4880-8a05-2e0f16c7b509",
@@ -117,7 +120,7 @@
             "createIfNotFound": true,
             "createIfNotFoundLocation": "bottom"
           },
-          "prepend": true,
+          "prepend": false,
           "task": true,
           "openFileInNewTab": {
             "enabled": false,
@@ -160,6 +163,64 @@
           },
           "openFile": true,
           "openFileInMode": "preview"
+        },
+        {
+          "id": "71be8594-75c4-4d8c-a5ad-9a259bb29012",
+          "name": "New App",
+          "type": "Template",
+          "command": true,
+          "templatePath": "shore/templates/qa-app.md",
+          "fileNameFormat": {
+            "enabled": true,
+            "format": "{{VALUE}}"
+          },
+          "folder": {
+            "enabled": true,
+            "folders": [
+              "para/lets/a/Apps Catalog"
+            ],
+            "chooseWhenCreatingNote": false,
+            "createInSameFolderAsActiveFile": false
+          },
+          "appendLink": false,
+          "openFileInNewTab": {
+            "enabled": false,
+            "direction": "vertical",
+            "focus": true
+          },
+          "openFile": true,
+          "openFileInMode": "default",
+          "setFileExistsBehavior": true,
+          "fileExistsMode": "Increment the file name"
+        },
+        {
+          "id": "c1a5a0b6-7235-4def-8ea0-e29063705828",
+          "name": "New Inventory Item",
+          "type": "Template",
+          "command": true,
+          "templatePath": "shore/templates/qa-inventory-item.md",
+          "fileNameFormat": {
+            "enabled": true,
+            "format": "{{VALUE}}"
+          },
+          "folder": {
+            "enabled": true,
+            "folders": [
+              "para/lets/p/Personal Inventory"
+            ],
+            "chooseWhenCreatingNote": false,
+            "createInSameFolderAsActiveFile": false
+          },
+          "appendLink": false,
+          "openFileInNewTab": {
+            "enabled": false,
+            "direction": "vertical",
+            "focus": true
+          },
+          "openFile": true,
+          "openFileInMode": "default",
+          "setFileExistsBehavior": true,
+          "fileExistsMode": "Increment the file name"
         }
       ],
       "collapsed": false
@@ -249,6 +310,13 @@
       "type": "Multi",
       "command": true,
       "choices": [
+        {
+          "id": "9f0120a3-20d0-4fd2-b5c8-4d07e4cba60c",
+          "name": "OpenAI",
+          "type": "Macro",
+          "command": true,
+          "macroId": "edd0a074-9551-4d9b-88b9-b084e52b0f18"
+        },
         {
           "id": "53843819-9e6e-4a50-bc46-03c7773e33c8",
           "name": "DataViewX All",
@@ -610,7 +678,30 @@
         }
       ],
       "runOnStartup": false
+    },
+    {
+      "name": "openai",
+      "id": "edd0a074-9551-4d9b-88b9-b084e52b0f18",
+      "commands": [
+        {
+          "name": "openai",
+          "type": "UserScript",
+          "id": "9eaf441b-c255-42eb-a0e2-9c1487b6484a",
+          "path": "shore/quickadd/openai.js",
+          "settings": {
+          }
+        }
+      ],
+      "runOnStartup": false
     }
   ],
-  "inputPrompt": "single-line"
+  "inputPrompt": "single-line",
+  "devMode": false,
+  "templateFolderPath": "shore/templates",
+  "migrations": {
+    "migrateToMacroIDFromEmbeddedMacro": true,
+    "useQuickAddTemplateFolder": true,
+    "incrementFileNameSettingMoveToDefaultBehavior": true,
+    "mutualExclusionInsertAfterAndWriteToBottomOfFile": true
+  }
 }
