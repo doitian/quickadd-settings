@@ -20,6 +20,7 @@ module.exports = {
       },
       [OPENAI_PROMPTS_OPTION]: {
         type: "text",
+        // Example: https://kb.iany.me/para/lets/c/ChatGPT+Sessions/ChatGPT+Prompts
         defaultValue: "para/lets/c/ChatGPT Sessions/ChatGPT Prompts.md"
         placeholder: "TOKEN",
       },

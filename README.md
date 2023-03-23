@@ -15,6 +15,7 @@ This is how QuickAdd describes itself. Indeed, it is also a framework to extend 
 
 ## Features
 
+- `openai.js`: Choose prompts from a library ([example](https://kb.iany.me/para/lets/c/ChatGPT+Sessions/ChatGPT+Prompts)) and call ChatGPT API.
 - `cycle-pane.js`: Add new commands to cycle between panes, like [phibr0/cycle-through-panes](https://github.com/phibr0/cycle-through-panes).
 - `dataviewx-all.js`: Run `dataviewx-this.js` on all files in the vault.
 - `dataviewx-this.js`: Export DataView result into markdown in place.
