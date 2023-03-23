@@ -10,6 +10,10 @@ function formatMetadata(metadata) {
 }
 
 function getFileName(fileName) {
+  if (fileName === "") {
+    return "Untitled";
+  }
+
   return fileName
     .replaceAll(":", "")
     .replace(/[/\\?%*|"<>]/g, "-")
@@ -26,7 +30,14 @@ async function cacheImport(name, url, importDefault = true) {
 }
 
 async function start({ app, quickAddApi }) {
-  const url = (await quickAddApi.inputPrompt("URL", "%.html")).trim();
+  const urlInput = await quickAddApi.inputPrompt("URL", "%.html");
+  if (urlInput === undefined) {
+    // canceled
+    return;
+  }
+
+  const readVault = urlInput.startsWith(" ");
+  const url = urlInput.trim();
 
   const Turndown = await cacheImport(
     "Turndown",
@@ -42,8 +53,9 @@ async function start({ app, quickAddApi }) {
     "https://unpkg.com/@tehshrike/readability@0.2.0"
   );
 
-  const document =
-    url === "" ? await getVaultDocument(app) : await fetchDocument(url);
+  const document = readVault
+    ? await getVaultDocument(app, url)
+    : await fetchDocument(url);
   const { title, byline, content } = new Readability(document).parse() || {
     title: document.title,
     byline: null,
@@ -70,16 +82,14 @@ async function start({ app, quickAddApi }) {
   if (title.trim() !== "") {
     metadata["Title"] = title.trim();
   }
-  if (url !== "") {
-    const host = url.split("://", 2)[1].split("/", 1)[0];
-    metadata["URL"] = `[${host}](${url})`;
-    metadata["Host"] = `[[${host}]]`;
-  }
+  const host = url.split("://", 2)[1].split("/", 1)[0];
+  metadata["URL"] = `[${host}](${url})`;
+  metadata["Host"] = `[[${host}]]`;
   if (byline !== null && byline !== undefined) {
     metadata["Author"] = `[[${byline}]]`;
   }
 
-  const fileContent = [
+  let fileContent = [
     "## Metadata\n",
     formatMetadata(metadata),
     "\n## Synopsis\n",
@@ -101,7 +111,18 @@ async function start({ app, quickAddApi }) {
   }
 }
 
-async function getVaultDocument(app) {
+// https://stackoverflow.com/a/55606029/667158
+function setBaseURI(dom, url) {
+  if (dom.head.getElementsByTagName("base").length == 0) {
+    let baseEl = dom.createElement("base");
+    baseEl.setAttribute("href", url);
+    dom.head.append(baseEl);
+  }
+
+  return dom;
+}
+
+async function getVaultDocument(app, url) {
   const currentFile = app.workspace.getActiveFile();
   if (!currentFile) {
     new Notice("🔴error: no active file");
@@ -118,10 +139,10 @@ async function getVaultDocument(app) {
 
   const htmlFile = app.vault.getAbstractFileByPath(htmlFilePath);
   const html = await app.vault.read(htmlFile);
-  return new DOMParser().parseFromString(html, "text/html");
+  return setBaseURI(new DOMParser().parseFromString(html, "text/html"), url);
 }
 
 async function fetchDocument(url) {
   const html = await request(url);
-  return new DOMParser().parseFromString(html, "text/html");
+  return setBaseURI(new DOMParser().parseFromString(html, "text/html"), url);
 }

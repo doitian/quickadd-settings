@@ -20,7 +20,7 @@ module.exports = {
       },
       [OPENAI_PROMPTS_OPTION]: {
         type: "text",
-        defaultValue: "para/lets/a/AIGC/ChatGPT Prompts.md",
+        defaultValue: "para/lets/c/ChatGPT Sessions/ChatGPT Prompts.md"
         placeholder: "TOKEN",
       },
     },
@@ -41,18 +41,53 @@ async function getPrompts(app, settings) {
 
   for (const section of content.split("\n## ").slice(2)) {
     const parts = section.split("\n### ");
-    const prompt = { title: parts[0].trim() };
-    for (const field of parts.slice(1)) {
-      const trimmedField = field.trim();
-      const newlinePos = trimmedField.indexOf("\n");
-      if (newlinePos > 0) {
-        const fieldName = trimmedField.substring(0, newlinePos).toLowerCase();
-        prompt[fieldName] = trimmedField.substring(newlinePos + 1).trim();
-      }
-    }
+    const titleAndCallout = parts[0].trim().split("\n", 1)[0].split(" !");
+    const prompt = {
+      title: titleAndCallout[0],
+      callout: titleAndCallout.length > 1 ? titleAndCallout[1] : "info",
+      session: parts.slice(1).join("\n### ").trim()
+    };
     prompts.push(prompt);
   }
   return prompts;
+}
+
+async function callApi(messages, settings) {
+  const payload = {
+    model: settings[OPENAI_MODEL_OPTION],
+    messages,
+  };
+
+  try {
+    const resp = await requestUrl({
+      url: "https://api.openai.com/v1/chat/completions",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${settings[OPENAI_TOKEN_OPTION]}`,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    return resp.json.choices[0].message.content;
+  } catch (ex) {
+    const message = `🔴error: ${ex}`;
+    new Notice(message);
+    return message;
+  }
+}
+
+async function sendSession(input, settings) {
+  const messages = [];
+
+  for (const message of input.split("\n### ").slice(1)) {
+    const splitPos = message.indexOf("\n");
+    const role = message.substring(0, splitPos).trim().toLowerCase();
+    const content = message.substring(splitPos + 1).trim();
+    messages.push({ role, content });
+  }
+
+  return await callApi(messages, settings);
 }
 
 async function start(params, settings) {
@@ -70,6 +105,16 @@ async function start(params, settings) {
       ? selection
       : await app.vault.read(app.workspace.getActiveFile());
 
+  if (selection === "" && input.indexOf("#chatgpt-session") >= 0) {
+    const sessionResp = await sendSession(input, settings);
+    const lastLine = editor.lastLine();
+    editor.replaceRange(`\n\n### Assistant\n\n${sessionResp.trim()}\n`, {
+      line: lastLine + 1,
+      pos: 0,
+    });
+    return;
+  }
+
   const prompts = await getPrompts(app, settings);
 
   if (prompts.length === 0) {
@@ -78,45 +123,20 @@ async function start(params, settings) {
   }
 
   const selected = await quickAddApi.suggester(
-    prompts.map((p) => p["title"].split(" !", 1)[0]),
+    prompts.map((p) => p["title"]),
     prompts
   );
 
-  const payload = {
-    model: settings[OPENAI_MODEL_OPTION],
-    messages: [],
-  };
-
-  for (const key in selected) {
-    if (key !== "title") {
-      payload["messages"].push({
-        role: key,
-        content: selected[key].replace("{SELECTION}", input),
-      });
-    }
-  }
-
-  const resp = await requestUrl({
-    url: "https://api.openai.com/v1/chat/completions",
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${settings[OPENAI_TOKEN_OPTION]}`,
-    },
-    body: JSON.stringify(payload),
-  });
-
-  const respContent = resp.json.choices[0].message.content;
+  const respContent = await sendSession(
+    selected.session.replaceAll("{input}", input),
+    settings
+  );
 
   const from = editor.getCursor("from");
   const to = editor.getCursor("to");
   const pos = { line: Math.max(from.line, to.line) + 1, ch: 0 };
-  const calloutTitleType = selected["title"].split(" !");
-  const calloutTitle = calloutTitleType[0];
-  const calloutType =
-    calloutTitleType.length > 1 ? calloutTitleType[1] : "info";
-  const callout = `\n> [!${calloutType}] ${calloutTitle}\n> ${respContent
-    .trim()
-    .replace(/\r*\n/g, "$&> ")}\n\n`;
+  const callout = `\n\n> [!${selected.callout}] ${
+    selected.title
+  }\n> ${respContent.trim().replace(/\r*\n/g, "$&> ")}\n\n`;
   editor.replaceRange(callout, pos);
 }
