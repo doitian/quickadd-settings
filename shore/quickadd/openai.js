@@ -21,7 +21,7 @@ module.exports = {
       [OPENAI_PROMPTS_OPTION]: {
         type: "text",
         // Example: https://kb.iany.me/para/lets/c/ChatGPT+Sessions/ChatGPT+Prompts
-        defaultValue: "para/lets/c/ChatGPT Sessions/ChatGPT Prompts.md"
+        defaultValue: "para/lets/c/ChatGPT Sessions/ChatGPT Prompts.md",
         placeholder: "TOKEN",
       },
     },
@@ -46,17 +46,18 @@ async function getPrompts(app, settings) {
     const prompt = {
       title: titleAndCallout[0],
       callout: titleAndCallout.length > 1 ? titleAndCallout[1] : "info",
-      session: parts.slice(1).join("\n### ").trim()
+      session: parts.slice(1).join("\n### ").trim(),
     };
     prompts.push(prompt);
   }
   return prompts;
 }
 
-async function callApi(messages, settings) {
+async function callApi(messages, settings, options) {
   const payload = {
     model: settings[OPENAI_MODEL_OPTION],
     messages,
+    ...options,
   };
 
   try {
@@ -79,7 +80,22 @@ async function callApi(messages, settings) {
 }
 
 async function sendSession(input, settings) {
+  const options = {};
   const messages = [];
+
+  input.split("\n").forEach((item) => {
+    if (item.startsWith("**") && item.indexOf("**:: ") > 0) {
+      const keyValue = item.split("**:: ");
+      const key = keyValue[0].substring(2);
+      let value = keyValue[1].trim();
+      try {
+        value = JSON.parse(value);
+      } catch (e) {
+        // ignore
+      }
+      options[key] = value;
+    }
+  });
 
   for (const message of input.split("\n### ").slice(1)) {
     const splitPos = message.indexOf("\n");
@@ -88,7 +104,7 @@ async function sendSession(input, settings) {
     messages.push({ role, content });
   }
 
-  return await callApi(messages, settings);
+  return await callApi(messages, settings, options);
 }
 
 async function start(params, settings) {
