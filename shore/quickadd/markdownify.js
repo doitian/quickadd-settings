@@ -53,15 +53,6 @@ async function start({ app, quickAddApi }) {
     "https://unpkg.com/@tehshrike/readability@0.2.0"
   );
 
-  const document = readVault
-    ? await getVaultDocument(app, url)
-    : await fetchDocument(url);
-  const { title, byline, content } = new Readability(document).parse() || {
-    title: document.title,
-    byline: null,
-    content: document.body,
-  };
-
   const turndownService = new Turndown({
     headingStyle: "atx",
     hr: "---",
@@ -70,7 +61,32 @@ async function start({ app, quickAddApi }) {
     emDelimiter: "*",
   });
   turndownService.use(TurndownPluginGfm.gfm);
+  const services = { turndownService, Readability };
 
+  if (url === ".") {
+    await downloadAllLinksInActiveFile(app, services);
+    return;
+  }
+
+  const document = readVault
+    ? await getVaultDocument(app, url)
+    : await fetchDocument(url);
+  const { title, byline, content } = markdownify(document, url, services);
+
+  if (url === "") {
+    await app.vault.append(app.workspace.getActiveFile(), content);
+  } else {
+    const newFile = await saveDocument("dock", { title, byline, content });
+    await app.workspace.getLeaf().openFile(newFile);
+  }
+}
+
+function markdownify(document, url, { turndownService, Readability }) {
+  const { title, byline, content } = new Readability(document).parse() || {
+    title: document.title,
+    byline: null,
+    content: document.body,
+  };
   const markdownBody = turndownService.turndown(content);
 
   const metadata = {
@@ -89,26 +105,16 @@ async function start({ app, quickAddApi }) {
     metadata["Author"] = `[[${byline}]]`;
   }
 
-  let fileContent = [
-    "## Metadata\n",
-    formatMetadata(metadata),
-    "\n## Synopsis\n",
-    markdownBody,
-  ].join("\n");
-
-  if (url === "") {
-    await app.vault.append(app.workspace.getActiveFile(), fileContent);
-  } else {
-    const fileName = getFileName(
-      byline !== null && byline !== undefined ? `${byline} - ${title}` : title
-    );
-    const filePath = `dock/${fileName}.md`;
-    const newFile = await app.vault.create(
-      filePath,
-      `# ${fileName}\n\n${fileContent}`
-    );
-    await app.workspace.getLeaf().openFile(newFile);
-  }
+  return {
+    title,
+    byline,
+    content: [
+      "## Metadata\n",
+      formatMetadata(metadata),
+      "\n## Synopsis\n",
+      markdownBody,
+    ].join("\n"),
+  };
 }
 
 // https://stackoverflow.com/a/55606029/667158
@@ -129,8 +135,6 @@ async function getVaultDocument(app, url) {
     return;
   }
 
-  app.vault.append(currentFile, fileContent);
-
   const htmlFilePath = currentFile.path.replace(/\.md$/, ".html");
   if (!(await app.vault.adapter.exists(htmlFilePath))) {
     new Notice(`🔴error: file ${htmlFilePath} not found`);
@@ -145,4 +149,43 @@ async function getVaultDocument(app, url) {
 async function fetchDocument(url) {
   const html = await request(url);
   return setBaseURI(new DOMParser().parseFromString(html, "text/html"), url);
+}
+
+async function saveDocument(inFolder, { title, byline, content }) {
+  const fileName = getFileName(
+    byline !== null && byline !== undefined ? `${byline} - ${title}` : title
+  );
+  const filePath = `${inFolder}/${fileName}.md`;
+  return await app.vault.create(filePath, `# ${fileName}\n\n${content}`);
+}
+
+async function downloadAllLinksInActiveFile(
+  app,
+  { turndownService, Readability }
+) {
+  const currentFile = app.workspace.getActiveFile();
+  if (!currentFile) {
+    new Notice("🔴error: no active file");
+    return;
+  }
+
+  const index = await app.vault.read(currentFile);
+  const regex = /\[(.*?)\]\((.*?)\)/g;
+  for (const match of index.matchAll(regex)) {
+    console.log(match);
+    const title = match[1];
+    const url = match[2];
+    const document = await fetchDocument(url);
+    const { byline, content } = markdownify(document, url, {
+      turndownService,
+      Readability,
+    });
+    const newFile = await saveDocument(currentFile.parent.path, {
+      title,
+      byline,
+      content,
+    });
+
+    new Notice(`🔵info: created ${newFile.path}`);
+  }
 }
