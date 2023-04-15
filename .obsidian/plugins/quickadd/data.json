@@ -223,7 +223,7 @@
           "fileExistsMode": "Increment the file name"
         }
       ],
-      "collapsed": false
+      "collapsed": true
     },
     {
       "id": "ffbdc0a7-db3f-47b0-b53e-feb0c2e9a1f7",
@@ -302,7 +302,7 @@
           "macroId": "4e2b3daf-ef09-4aa7-9832-ca388e0d10b7"
         }
       ],
-      "collapsed": false
+      "collapsed": true
     },
     {
       "id": "3816f711-b04c-43e5-8be0-62291e4ee459",
@@ -316,6 +316,13 @@
           "type": "Macro",
           "command": true,
           "macroId": "1f2a29fd-8893-4ecb-8e44-23bc943baa42"
+        },
+        {
+          "id": "3b5438b3-6380-4f3f-bf33-d11e34a16e0e",
+          "name": "Open All Links",
+          "type": "Macro",
+          "command": true,
+          "macroId": ""
         },
         {
           "id": "53843819-9e6e-4a50-bc46-03c7773e33c8",
@@ -368,22 +375,6 @@
         }
       ],
       "collapsed": false
-    },
-    {
-      "id": "f35f48de-5323-42a9-bbb2-93a6534d4d3d",
-      "name": "Misc",
-      "type": "Multi",
-      "command": false,
-      "choices": [
-        {
-          "id": "602b3077-d840-46bb-bde2-9a61151c1bb1",
-          "name": "Refresh Toolbar Icons",
-          "type": "Macro",
-          "command": false,
-          "macroId": null
-        }
-      ],
-      "collapsed": true
     }
   ],
   "macros": [
@@ -693,15 +684,32 @@
         }
       ],
       "runOnStartup": false
+    },
+    {
+      "name": "open-all-links",
+      "id": "c0b5a8c0-6418-41b1-9561-91646ab09e2a",
+      "commands": [
+        {
+          "name": "open-all-links",
+          "type": "UserScript",
+          "id": "0c56a280-e484-4985-88ff-7fdd3778ed5a",
+          "path": "shore/quickadd/open-all-links.js",
+          "settings": {}
+        }
+      ],
+      "runOnStartup": false
     }
   ],
   "inputPrompt": "single-line",
   "devMode": false,
   "templateFolderPath": "shore/templates",
+  "announceUpdates": true,
+  "version": "0.19.4",
   "migrations": {
     "migrateToMacroIDFromEmbeddedMacro": true,
     "useQuickAddTemplateFolder": true,
     "incrementFileNameSettingMoveToDefaultBehavior": true,
-    "mutualExclusionInsertAfterAndWriteToBottomOfFile": true
+    "mutualExclusionInsertAfterAndWriteToBottomOfFile": true,
+    "setVersionAfterUpdateModalRelease": true
   }
 }
