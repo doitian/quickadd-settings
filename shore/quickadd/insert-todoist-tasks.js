@@ -27,23 +27,8 @@ function scheduled(task) {
   return due.format(" HH:mm");
 }
 
-function formatLabels(task, labels) {
-  labels = task["label_ids"].map((id) => labels[id]).join(" #");
-  return labels.length > 0 ? " #" + labels : "";
-}
-
-async function fetchLabels(settings) {
-  const resp = await requestUrl({
-    url: "https://api.todoist.com/rest/v1/labels",
-    headers: { Authorization: `Bearer ${settings[TODOIST_TOKEN_OPTION]}` },
-  });
-
-  const labels = {};
-  for (let label of await resp.json) {
-    labels[label.id] = label.name;
-  }
-
-  return labels;
+function formatLabels(labels) {
+  return labels.length > 0 ? " #" + labels.join(" #") : "";
 }
 
 async function start(params, settings) {
@@ -60,11 +45,10 @@ async function start(params, settings) {
 
   const requestParams = new URLSearchParams({ filter: filter });
   const resp = await requestUrl({
-    url: `https://api.todoist.com/rest/v1/tasks?${requestParams}`,
+    url: `https://api.todoist.com/rest/v2/tasks?${requestParams}`,
     headers: { Authorization: `Bearer ${settings[TODOIST_TOKEN_OPTION]}` },
   });
   const tasks = resp.json.sort(taskCompareFn);
-  const labels = await fetchLabels(settings);
 
   const lines = ["\n## Daily Plan\n"];
   for (let task of tasks) {
@@ -76,16 +60,14 @@ async function start(params, settings) {
       } else {
         lines.push(
           `- [ ]${scheduled(task)} #p${priority} ${task.content}${formatLabels(
-            task,
-            labels
+            task.labels
           )} [«↪»](${task.url}) ^td-${id}`
         );
       }
     } else {
       lines.push(
         `- [ ] #p${priority} ${task.content}${formatLabels(
-          task,
-          labels
+          task.labels
         )} [«↪»](${task.url}) ^todoist-${id}`
       );
     }

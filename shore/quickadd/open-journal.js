@@ -20,13 +20,19 @@ function makeJournalContent(date) {
 }
 
 function makeDailyContent(date) {
+  console.log(date);
   const yyyymmdd = date.format("YYYY-MM-DD");
+  console.log(yyyymmdd);
 
   return [
     `![[${date.format("gggg-[W]ww")}#^index]]\n`,
     `# ${date.format("ddd, MMM D, YYYY")}\n`,
     "**Kind**:: #periodic/daily",
     `**Week**:: [[${date.format("gggg-[W]ww")}]]\n`,
+    `- [ ] Plan the date ${date.format("ddd, MMM D, YYYY")}`,
+    `![[Journal ${date.format("YYYY-MM-DD")}#Daily Plan]]`,
+    `- [ ] Review the date ${date.format("ddd, MMM D, YYYY")}`,
+    `![[Journal ${date.format("YYYY-MM-DD")}#Daily Review]]\n`,
     "## Journal",
     `**Journal**:: [[Journal ${yyyymmdd}]]`,
     `![[Journal ${yyyymmdd}#Journal]]`,

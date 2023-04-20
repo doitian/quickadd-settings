@@ -24,14 +24,25 @@ async function oblEx(cm, params) {
 }
 
 async function cssEx(cm, params) {
-  if (params?.args?.length !== 1) {
-    console.log(`🔵info: css ${this.app.customCss.snippets.join("|")}`);
-    throw new Error(notice("🔴error: ob requires exactly 1 parameter"));
-  }
+  const app = this.app;
 
-  const snippet = params.args[0];
-  const status = !this.app.customCss.enabledSnippets.has(snippet);
-  this.app.customCss.setCssEnabledStatus(snippet, status);
+  if (params?.args?.length !== 1) {
+    while (true) {
+      const snippet = await this.quickAddApi.suggester(
+        (s) => `${s} ${app.customCss.enabledSnippets.has(s) ? '🟢' : '🚫'}`,
+        this.app.customCss.snippets,
+      );
+      if (snippet === null || snippet === undefined) {
+        break;
+      }
+      const status = !app.customCss.enabledSnippets.has(snippet);
+      app.customCss.setCssEnabledStatus(snippet, status);
+    }
+  } else {
+    snippet = params.args[0];
+    const status = !app.customCss.enabledSnippets.has(snippet);
+    app.customCss.setCssEnabledStatus(snippet, status);
+  }
 }
 
 // https://github.com/words/ap-style-title-case/blob/master/index.js
@@ -136,7 +147,7 @@ function swapLineAction(_cm, { repeat, down }) {
   }
 }
 
-module.exports = async function ({ app, obsidian }) {
+module.exports = async function ({ app, obsidian, quickAddApi }) {
   window.Obsidian = obsidian;
 
   const vim = window.CodeMirrorAdapter?.Vim;
@@ -145,7 +156,7 @@ module.exports = async function ({ app, obsidian }) {
     return;
   }
 
-  const ctx = { app };
+  const ctx = { app, quickAddApi };
   vim.defineEx("obr", "", obrEx.bind(ctx));
   vim.defineEx("obl", "", oblEx.bind(ctx));
   vim.defineEx("css", "", cssEx.bind(ctx));

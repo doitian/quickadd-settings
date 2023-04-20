@@ -64,6 +64,7 @@ const PropertySuggesters = {
   Topic: pageSuggester,
   Topics: pageSuggester,
   Parent: pageSuggester,
+  Highlights: pageSuggester,
   Kind: tagSuggester,
 };
 
@@ -77,6 +78,11 @@ const Snippets = {
   vvspace: () => "␣",
   vveop: () => "∎",
   vvreturn: () => "↩︎",
+  vvref: () => "※",
+  ttitle: ({ file }) =>
+    file.name.substring(0, file.name.length - file.extension.length - 1),
+  ffname: ({ file }) => file.name,
+  ffpath: ({ file }) => file.path,
 };
 
 const SnippetsRegExp = new RegExp(`(${Object.keys(Snippets).join("|")})$`);
@@ -174,6 +180,7 @@ const CALLOUT_TYPES = [
   "cite",
   "file",
   "code",
+  "bot",
 ];
 
 async function start(
@@ -230,6 +237,23 @@ async function start(
     const key = line.slice(keyStartPosition.ch, keyEndPosition.ch);
     editor.replaceRange("**:: ", keyEndPosition, cursor);
     editor.replaceRange("**", keyStartPosition);
+    await suggestPropertyValue(editor, quickAddApi, key);
+    return;
+  }
+
+  if (textBefore.endsWith(":: ")) {
+    const keyStartPosition = {
+      line: cursor.line,
+      ch: lastIndexOfGroup(textBefore, ["(", "["]) + 1,
+    };
+    const keyEndPosition = { line: cursor.line, ch: cursor.ch - 3 };
+    let key = line.slice(keyStartPosition.ch, keyEndPosition.ch);
+    if (key.startsWith("**") && key.endsWith("**")) {
+      key = key.substring(2, key.length - 2);
+    } else {
+      editor.replaceRange("**:: ", keyEndPosition, cursor);
+      editor.replaceRange("**", keyStartPosition);
+    }
     await suggestPropertyValue(editor, quickAddApi, key);
     return;
   }

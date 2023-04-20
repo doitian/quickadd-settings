@@ -58,9 +58,9 @@
             "chooseWhenCreatingNote": false,
             "createInSameFolderAsActiveFile": true
           },
-          "appendLink": false,
+          "appendLink": true,
           "openFileInNewTab": {
-            "enabled": false,
+            "enabled": true,
             "direction": "vertical",
             "focus": true
           },
@@ -223,7 +223,7 @@
           "fileExistsMode": "Increment the file name"
         }
       ],
-      "collapsed": true
+      "collapsed": false
     },
     {
       "id": "ffbdc0a7-db3f-47b0-b53e-feb0c2e9a1f7",
@@ -302,7 +302,7 @@
           "macroId": "4e2b3daf-ef09-4aa7-9832-ca388e0d10b7"
         }
       ],
-      "collapsed": true
+      "collapsed": false
     },
     {
       "id": "3816f711-b04c-43e5-8be0-62291e4ee459",
