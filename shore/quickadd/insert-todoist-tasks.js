@@ -61,14 +61,14 @@ async function start(params, settings) {
         lines.push(
           `- [ ]${scheduled(task)} #p${priority} ${task.content}${formatLabels(
             task.labels
-          )} [«↪»](${task.url}) ^td-${id}`
+          )} [«↪»](${task.url}) ^tp-${id}`
         );
       }
     } else {
       lines.push(
         `- [ ] #p${priority} ${task.content}${formatLabels(
           task.labels
-        )} [«↪»](${task.url}) ^todoist-${id}`
+        )} [«↪»](${task.url}) ^tp-${id}`
       );
     }
 

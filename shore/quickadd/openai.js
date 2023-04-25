@@ -5,6 +5,13 @@ const OPENAI_TOKEN_ALT_OPTION = "OpenAI Token Alt";
 const OPENAI_ENDPOINT_ALT_OPTION = "OpenAI Endpoint Alt";
 const OPENAI_PROMPTS_OPTION = "OpenAI Prompts";
 
+const BUILTIN_SESSIONS = [
+  {
+    title: "Adhoc",
+    session: "\n### .User\n${input}",
+  },
+];
+
 const COMPLETION_METHODS = [
   {
     title: "+callout",
@@ -85,11 +92,11 @@ async function getPrompts(app, settings) {
   const content = await app.vault.read(promptsFile);
 
   for (const section of content.split("\n## ").slice(2)) {
-    const parts = section.split("\n### ");
+    const parts = section.split("\n### .");
     const title = parts[0].trim().split("\n", 1)[0].trim();
     const prompt = {
       title,
-      session: `## Session\n\n### ${parts.slice(1).join("\n### ").trim()}`,
+      session: `## Session\n\n### .${parts.slice(1).join("\n### .").trim()}`,
     };
     prompts.push(prompt);
   }
@@ -97,6 +104,7 @@ async function getPrompts(app, settings) {
 }
 
 async function callApi(messages, settings, options) {
+  console.log(messages);
   const payload = {
     model: settings[OPENAI_MODEL_OPTION],
     messages,
@@ -140,11 +148,13 @@ async function sendSession(input, settings) {
     }
   });
 
-  for (const message of input.split("\n### ").slice(1)) {
+  for (const message of input.split("\n### .").slice(1)) {
     const splitPos = message.indexOf("\n");
     const role = message.substring(0, splitPos).trim().toLowerCase();
-    const content = message.substring(splitPos + 1).trim();
-    messages.push({ role, content });
+    if (!role.startsWith('x')) {
+      const content = message.substring(splitPos + 1).trim();
+      messages.push({ role, content });
+    }
   }
 
   if (messages.length === 0) {
@@ -170,6 +180,8 @@ async function start(params, settings) {
     return;
   }
   const editor = leaf.view.editor;
+  const cursorFrom = editor.getCursor("from");
+  const cursorTo = editor.getCursor("to");
   const activeFile = app.workspace.getActiveFile();
   const selection = editor.getSelection();
   const input = selection !== "" ? selection : await app.vault.read(activeFile);
@@ -177,7 +189,7 @@ async function start(params, settings) {
   if (selection === "" && input.indexOf("#ai-session") >= 0) {
     const sessionResp = await sendSession(input, settings);
     const lastLine = editor.lastLine();
-    editor.replaceRange(`\n\n### Assistant\n\n${sessionResp.trim()}\n`, {
+    editor.replaceRange(`\n\n###. Assistant\n\n${sessionResp.trim()}\n`, {
       line: lastLine + 1,
       pos: 0,
     });
@@ -191,37 +203,33 @@ async function start(params, settings) {
     return;
   }
 
-  const choices = prompts.concat(COMPLETION_METHODS);
+  const choices = prompts.concat(BUILTIN_SESSIONS).concat(COMPLETION_METHODS);
   let selected = {};
-  while (!('session' in selected)) {
-    if ('title' in selected) {
+  while (!("session" in selected)) {
+    if ("title" in selected) {
       settings.completionMethod = selected.title;
     }
-    selected = await quickAddApi.suggester(
-      (p) => p["title"],
-      choices
-    );
+    selected = await quickAddApi.suggester((p) => p["title"], choices);
     if (selected === undefined) {
       return;
     }
   }
 
-  let session = selected.session.replaceAll("{input}", input);
-  const variableRegex = /\{[a-zA-Z]+\}/g;
-  const variables = {};
-  for (const match in session.matchAll(variableRegex)) {
+  const variableRegex = /\$\{[a-zA-Z]+\}/g;
+  const variables = {
+    "${input}": input,
+  };
+  for (const match of selected.session.matchAll(variableRegex)) {
     variables.found = true;
     if (!(match[0] in variables)) {
       variables[match[0]] = await quickAddApi.inputPrompt(match[0]);
     }
   }
-  if (variables.found) {
-    session = session.replace(variableRegex, (match) => variables[match[0]]);
-  }
 
+  const session = selected.session.replace(variableRegex, (match) => variables[match]);
   const respContent = await sendSession(session, settings);
 
-  if (settings.completionMethod === '+new-file') {
+  if (settings.completionMethod === "+new-file") {
     let linkText = input;
     if (input.startsWith("[[") && input.endsWith("]]")) {
       linkText = input.substring(2, input.length - 2);
@@ -245,17 +253,15 @@ async function start(params, settings) {
         "",
         session.trim(),
         "",
-        "### Assistant\n",
+        "### .Assistant\n",
         respContent,
       ].join("\n"),
       from
     );
-  } else if (settings.completionMethod === '+in-place') {
-    editor.replaceSelection(respContent);
+  } else if (settings.completionMethod === "+in-place") {
+    editor.replaceRange(respContent, cursorFrom, cursorTo);
   } else {
-    const from = editor.getCursor("from");
-    const to = editor.getCursor("to");
-    const pos = { line: Math.max(from.line, to.line) + 1, ch: 0 };
+    const pos = { line: Math.max(cursorFrom.line, cursorTo.line) + 1, ch: 0 };
     const callout = `\n\n> [!bot] ${selected.title}\n> ${respContent
       .trim()
       .replace(/\r*\n/g, "$&> ")}\n\n`;

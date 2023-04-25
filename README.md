@@ -40,6 +40,9 @@ This is how QuickAdd describes itself. Indeed, it is also a framework to extend 
 :
 
 rsync -avz --delete "$HOME/Dropbox/Brain/shore/quickadd/" "./shore/quickadd/"
-sed -E '/"(Todoist Token|Dictionary API Key|Word Prefix|OpenAI (Token|Model|Prompts|Endpoint)( Alt)?)":/d' "$HOME/Dropbox/Brain/.obsidian/plugins/quickadd/data.json" > "./.obsidian/plugins/quickadd/data.json"
+sed -E \
+    -e '/"(Todoist Token|Dictionary API Key|Word Prefix|OpenAI (Token|Model|Prompts|Endpoint)( Alt)?)":/d' \
+    -e 's/"OpenAIApiKey": ".*"(,?)/"OpenAIApiKey": "Ask me"\1/' \
+    "$HOME/Dropbox/Brain/.obsidian/plugins/quickadd/data.json" > "./.obsidian/plugins/quickadd/data.json"
 
 # vim: ft=markdown

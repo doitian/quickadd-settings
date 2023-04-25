@@ -58,7 +58,7 @@
             "chooseWhenCreatingNote": false,
             "createInSameFolderAsActiveFile": true
           },
-          "appendLink": true,
+          "appendLink": false,
           "openFileInNewTab": {
             "enabled": true,
             "direction": "vertical",
@@ -311,13 +311,6 @@
       "command": true,
       "choices": [
         {
-          "id": "a37a0e6a-e9f9-42e6-a21a-15e837b1f901",
-          "name": "OpenAI",
-          "type": "Macro",
-          "command": true,
-          "macroId": "1f2a29fd-8893-4ecb-8e44-23bc943baa42"
-        },
-        {
           "id": "3b5438b3-6380-4f3f-bf33-d11e34a16e0e",
           "name": "Open All Links",
           "type": "Macro",
@@ -375,6 +368,28 @@
         }
       ],
       "collapsed": false
+    },
+    {
+      "id": "5f224118-36d0-4985-91ab-0d5f6d2c163e",
+      "name": "AI…",
+      "type": "Multi",
+      "command": false,
+      "choices": [
+        {
+          "id": "a37a0e6a-e9f9-42e6-a21a-15e837b1f901",
+          "name": "OpenAI",
+          "type": "Macro",
+          "command": true,
+          "macroId": "1f2a29fd-8893-4ecb-8e44-23bc943baa42"
+        },
+        {
+          "id": "b962d9e5-83f0-43c1-858e-ad69462a2c39",
+          "name": "Summarize",
+          "type": "Macro",
+          "command": true,
+          "macroId": "e2111c26-5181-468c-bfc7-4b64dbbe40ed"
+        }
+      ]
     }
   ],
   "macros": [
@@ -385,7 +400,7 @@
         {
           "name": "dataviewx-this",
           "type": "UserScript",
-          "id": "1794c15a-55e3-46b2-b548-718125e0d6b0",
+          "id": "63092d26-1763-441b-9601-692e672b74c4",
           "path": "shore/quickadd/dataviewx-this.js",
           "settings": {}
         }
@@ -698,13 +713,79 @@
         }
       ],
       "runOnStartup": false
+    },
+    {
+      "name": "ai-summary",
+      "id": "e2111c26-5181-468c-bfc7-4b64dbbe40ed",
+      "commands": [
+        {
+          "name": "AI Assistant",
+          "type": "AIAssistant",
+          "id": "c810dee4-fd26-4abd-a0d0-10d121b6f2a1",
+          "model": "gpt-3.5-turbo",
+          "systemPrompt": "As an AI assistant within Obsidian, your primary goal is to help users manage their ideas and knowledge more effectively. Format your responses using Markdown syntax. Please use the [[Obsidian]] link format. You can write aliases for the links by writing [[Obsidian|the alias after the pipe symbol]]. To use mathematical notation, use LaTeX syntax. LaTeX syntax for larger equations should be on separate lines, surrounded with double dollar signs ($$). You can also inline math expressions by wrapping it in $ symbols. For example, use $$w_{ij}^{\text{new}}:=w_{ij}^{\text{current}}+etacdotdelta_jcdot x_{ij}$$ on a separate line, but you can write \"($eta$ = learning rate, $delta_j$ = error term, $x_{ij}$ = input)\" inline.",
+          "outputVariableName": "output",
+          "promptTemplate": {
+            "enable": true,
+            "name": "AI Summary.md"
+          }
+        },
+        {
+          "name": "Append AI Response",
+          "type": "NestedChoice",
+          "id": "08299af3-6a49-492a-a7e5-371a0594011b",
+          "choice": {
+            "id": "d02f1bee-da68-49fa-a934-4732467c0285",
+            "name": "Append AI Response",
+            "type": "Capture",
+            "command": false,
+            "appendLink": false,
+            "captureTo": "",
+            "captureToActiveFile": true,
+            "createFileIfItDoesntExist": {
+              "enabled": false,
+              "createWithTemplate": false,
+              "template": ""
+            },
+            "format": {
+              "enabled": true,
+              "format": "{{selected}}\n\n{{value:output}}"
+            },
+            "insertAfter": {
+              "enabled": false,
+              "after": "",
+              "insertAtEnd": false,
+              "considerSubsections": false,
+              "createIfNotFound": false,
+              "createIfNotFoundLocation": "top"
+            },
+            "prepend": false,
+            "task": false,
+            "openFileInNewTab": {
+              "enabled": false,
+              "direction": "vertical",
+              "focus": true
+            },
+            "openFile": false,
+            "openFileInMode": "default"
+          }
+        }
+      ],
+      "runOnStartup": false
     }
   ],
   "inputPrompt": "single-line",
   "devMode": false,
   "templateFolderPath": "shore/templates",
   "announceUpdates": true,
-  "version": "0.19.4",
+  "version": "0.23.0",
+  "ai": {
+    "OpenAIApiKey": "Ask me",
+    "defaultModel": "gpt-3.5-turbo",
+    "defaultSystemPrompt": "As an AI assistant within Obsidian, your primary goal is to help users manage their ideas and knowledge more effectively. Format your responses using Markdown syntax. Please use the [[Obsidian]] link format. You can write aliases for the links by writing [[Obsidian|the alias after the pipe symbol]]. To use mathematical notation, use LaTeX syntax. LaTeX syntax for larger equations should be on separate lines, surrounded with double dollar signs ($$). You can also inline math expressions by wrapping it in $ symbols. For example, use $$w_{ij}^{\text{new}}:=w_{ij}^{\text{current}}+etacdotdelta_jcdot x_{ij}$$ on a separate line, but you can write \"($eta$ = learning rate, $delta_j$ = error term, $x_{ij}$ = input)\" inline.",
+    "promptTemplatesFolderPath": "shore/prompts",
+    "showAssistant": true
+  },
   "migrations": {
     "migrateToMacroIDFromEmbeddedMacro": true,
     "useQuickAddTemplateFolder": true,
