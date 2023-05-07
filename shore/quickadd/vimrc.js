@@ -5,7 +5,7 @@ function notice(text) {
 
 async function obrEx(cm, params) {
   if (params?.args?.length !== 1) {
-    throw new Error(notice("🔴error: ob requires exactly 1 parameter"));
+    throw new Error(notice("🔴error: obr requires exactly 1 parameter"));
   }
 
   const command = params.args[0];
@@ -18,9 +18,11 @@ async function oblEx(cm, params) {
     commands = commands.filter((command) => command.includes(keyword));
   }
 
-  console.log(
-    `🔵info: obl ${params?.args?.join?.(" ")}\n  ${commands.join("\n  ")}`
-  );
+  const choice = await this.quickAddApi.suggester(commands, commands);
+  if (choice !== null) {
+    await this.quickAddApi.utility.setClipboard(choice);
+    new Notice(`🔵info: copied ${choice} to the clipboard`);
+  }
 }
 
 async function cssEx(cm, params) {
@@ -29,8 +31,8 @@ async function cssEx(cm, params) {
   if (params?.args?.length !== 1) {
     while (true) {
       const snippet = await this.quickAddApi.suggester(
-        (s) => `${s} ${app.customCss.enabledSnippets.has(s) ? '🟢' : '🚫'}`,
-        this.app.customCss.snippets,
+        (s) => `${s} ${app.customCss.enabledSnippets.has(s) ? "🟢" : "🚫"}`,
+        this.app.customCss.snippets
       );
       if (snippet === null || snippet === undefined) {
         break;
