@@ -79,6 +79,8 @@ const Snippets = {
   vveop: () => "∎",
   vvreturn: () => "↩︎",
   vvref: () => "※",
+  "kk=>": () => "⇒",
+  "kk==": () => "⇔",
   ttitle: ({ file }) =>
     file.name.substring(0, file.name.length - file.extension.length - 1),
   ffname: ({ file }) => file.name,
