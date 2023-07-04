@@ -1,3 +1,4 @@
+// Insert Bibliography to the note by scanning all the citations like `[@citation]`.
 const JSON_RPC_ENDPOINT = "http://localhost:23119/better-bibtex/json-rpc";
 const HEADERS = {
   "User-Agent": "Obsidian",

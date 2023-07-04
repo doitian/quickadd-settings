@@ -1,3 +1,4 @@
+// Insert citation from Zotero library like `[@citation]`.
 const HEADERS = {
   "User-Agent": "Obsidian",
   "Zotero-Allowed-Request": "true",

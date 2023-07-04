@@ -1,8 +1,6 @@
 const OPENAI_MODEL_OPTION = "OpenAI Model";
 const OPENAI_TOKEN_OPTION = "OpenAI Token";
 const OPENAI_ENDPOINT_OPTION = "OpenAI Endpoint";
-const OPENAI_TOKEN_ALT_OPTION = "OpenAI Token Alt";
-const OPENAI_ENDPOINT_ALT_OPTION = "OpenAI Endpoint Alt";
 const OPENAI_PROMPTS_OPTION = "OpenAI Prompts";
 
 const SLEEP_INTERVAL = 100;
@@ -49,16 +47,6 @@ module.exports = {
         defaultValue: "https://api.openai.com",
         placeholder: "URI",
       },
-      [OPENAI_TOKEN_ALT_OPTION]: {
-        type: "text",
-        defaultValue: "",
-        placeholder: "TOKEN",
-      },
-      [OPENAI_ENDPOINT_ALT_OPTION]: {
-        type: "text",
-        defaultValue: "https://api.openai.com",
-        placeholder: "URI",
-      },
       [OPENAI_PROMPTS_OPTION]: {
         type: "text",
         // Example: https://kb.iany.me/para/lets/c/ChatGPT+Sessions/ChatGPT+Prompts
@@ -68,20 +56,6 @@ module.exports = {
     },
   },
 };
-
-function getToken(settings) {
-  if (settings[OPENAI_ENDPOINT_OPTION].startsWith("https://")) {
-    return settings[OPENAI_TOKEN_OPTION];
-  }
-  return settings[OPENAI_TOKEN_ALT_OPTION];
-}
-
-function getEndpoint(settings) {
-  if (settings[OPENAI_ENDPOINT_OPTION].startsWith("https://")) {
-    return settings[OPENAI_ENDPOINT_OPTION];
-  }
-  return settings[OPENAI_ENDPOINT_ALT_OPTION];
-}
 
 async function getPrompts(app, settings) {
   const prompts = [];
@@ -108,22 +82,35 @@ async function getPrompts(app, settings) {
 }
 
 async function callApi(messages, settings, options) {
+  const apiBase = settings[OPENAI_ENDPOINT_OPTION];
+  const isAzure = apiBase.includes(".azure.com");
+  const url = isAzure
+    ? `${apiBase}/openai/deployments/${settings[OPENAI_MODEL_OPTION]}/chat/completions?api-version=2023-05-15`
+    : `${apiBase}/v1/chat/completions`;
+
   const payload = {
-    model: settings[OPENAI_MODEL_OPTION],
     messages,
     ...options,
   };
+  const headers = {
+    "Content-Type": "application/json",
+  };
+
+  if (isAzure) {
+    headers["api-key"] = settings[OPENAI_TOKEN_OPTION];
+  } else {
+    payload.model = settings[OPENAI_MODEL_OPTION];
+    headers["Authorization"] = `Bearer ${settings[OPENAI_TOKEN_OPTION]}`;
+  }
 
   try {
     const req = {
-      url: `${getEndpoint(settings)}/v1/chat/completions`,
+      url,
+      headers,
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${getToken(settings)}`,
-      },
       body: JSON.stringify(payload),
     };
+    console.log(req);
     const resp = await requestUrl(req);
     return resp.json.choices[0].message.content;
   } catch (ex) {
@@ -200,10 +187,6 @@ async function sendSession(input, settings) {
 
 async function start(params, settings) {
   const { app, quickAddApi } = params;
-
-  if (!settings[OPENAI_ENDPOINT_OPTION].startsWith("https://")) {
-    console.log(`🔵info: OPENAI_API_HOST=${getEndpoint(settings)}`);
-  }
 
   const leaf = app.workspace.activeLeaf;
   if (!leaf || !leaf.view || !leaf.view.editor) {

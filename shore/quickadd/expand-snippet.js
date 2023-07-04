@@ -71,6 +71,7 @@ const PropertySuggesters = {
 const Snippets = {
   ddate: () => moment().format("YYYY-MM-DD"),
   ttime: () => moment().format("HH:mm:ss"),
+  zzettel: () => moment().format("YYYYMMDDHHmm"),
   ttitle: ({ file }) => file.basename,
   vvsharp: () => "♯",
   vvsec: () => "§",
@@ -195,6 +196,7 @@ async function start(
     new Notice("🔴error: no active editor");
     return;
   }
+  const dv = app.plugins.plugins["dataview"]?.api;
 
   if (editor?.cm?.cm?.state?.vim?.insertMode === false) {
     fallback({ app, editor }, settings);
@@ -229,6 +231,7 @@ async function start(
     await suggestPropertyValue(editor, quickAddApi, key);
     return;
   }
+
 
   if (textBefore.endsWith(":")) {
     const keyStartPosition = {
@@ -269,7 +272,6 @@ async function start(
     return;
   }
 
-  const dv = app.plugins.plugins["dataview"]?.api;
   if (dv !== undefined && textBefore.endsWith("]].")) {
     const wikilinkStartPosition = textBefore.lastIndexOf("[[");
     if (wikilinkStartPosition !== -1) {
@@ -329,6 +331,22 @@ async function start(
       { line: cursor.line, ch: cursor.ch - 4 },
       cursor
     );
+    return;
+  }
+
+  if (dv !== undefined && textBefore.endsWith("dv=")) {
+    const expression = await quickAddApi.inputPrompt("dv=");
+    const result = dv.evaluate(expression);
+    if (result.successful) {
+      editor.replaceRange(
+        `${result.value}`,
+        { line: cursor.line, ch: cursor.ch - 3 },
+        cursor
+      );
+    } else {
+      new Notice(`🔴error: ${result.error}`);
+    }
+    return;
   }
 
   const found = textBefore.match(SnippetsRegExp);

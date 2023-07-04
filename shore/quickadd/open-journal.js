@@ -9,10 +9,14 @@ function deriveDateFromFile(file) {
 }
 
 function makeJournalContent(date) {
+  const tomorrow = moment(date).add(1, "days");
+  const yesterday = moment(date).subtract(1, "days");
   return [
     `# Journal on ${date.format("ddd, MMM D, YYYY")}\n`,
     "## Metadata\n",
     `**Date**:: [[${date.format("YYYY-MM-DD")}]]`,
+    `**Next**:: [[Journal ${tomorrow.format("YYYY-MM-DD")}]]`,
+    `**Prev**:: [[Journal ${yesterday.format("YYYY-MM-DD")}]]`,
     "**Kind**:: #journal",
     "",
     "## Journal\n",
@@ -20,15 +24,18 @@ function makeJournalContent(date) {
 }
 
 function makeDailyContent(date) {
-  console.log(date);
   const yyyymmdd = date.format("YYYY-MM-DD");
-  console.log(yyyymmdd);
+  const tomorrow = moment(date).add(1, "days");
+  const yesterday = moment(date).subtract(1, "days");
 
   return [
     `![[${date.format("gggg-[W]ww")}#^index]]\n`,
     `# ${date.format("ddd, MMM D, YYYY")}\n`,
     "**Kind**:: #periodic/daily",
-    `**Week**:: [[${date.format("gggg-[W]ww")}]]\n`,
+    `**Week**:: [[${date.format("gggg-[W]ww")}]]`,
+    `**Next**:: [[${tomorrow.format("YYYY-MM-DD")}]]`,
+    `**Prev**:: [[${yesterday.format("YYYY-MM-DD")}]]`,
+    "",
     `- [ ] Plan the date ${date.format("ddd, MMM D, YYYY")}`,
     `![[Journal ${date.format("YYYY-MM-DD")}#Daily Plan]]`,
     `- [ ] Review the date ${date.format("ddd, MMM D, YYYY")}`,
