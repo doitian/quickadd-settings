@@ -42,7 +42,7 @@ module.exports = async (params) => {
   const exported = await replaceAsync(
     content,
     DATAVIEW_RE,
-    async (match, p1) =>
+    async (_match, p1) =>
       `%%+BEGIN: #dataviewx%%\n\`\`\`dataviewx\n${p1}\n\`\`\`\n\n${await queryMarkdown(
         api,
         p1,

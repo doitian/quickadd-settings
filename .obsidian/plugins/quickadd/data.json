@@ -97,6 +97,34 @@
           "fileExistsMode": "Increment the file name"
         },
         {
+          "id": "0155a74a-7b1f-41f9-b43c-87003ebc8cc9",
+          "name": "New Scene",
+          "type": "Template",
+          "command": true,
+          "templatePath": "shore/templates/tpl-scene.md",
+          "fileNameFormat": {
+            "enabled": false,
+            "format": ""
+          },
+          "folder": {
+            "enabled": true,
+            "folders": [],
+            "chooseWhenCreatingNote": false,
+            "createInSameFolderAsActiveFile": true,
+            "chooseFromSubfolders": true
+          },
+          "appendLink": false,
+          "openFileInNewTab": {
+            "enabled": false,
+            "direction": "vertical",
+            "focus": true
+          },
+          "openFile": false,
+          "openFileInMode": "default",
+          "fileExistsMode": "Increment the file name",
+          "setFileExistsBehavior": true
+        },
+        {
           "id": "8f62c489-06cf-4880-8a05-2e0f16c7b509",
           "name": "New Action",
           "type": "Capture",
@@ -231,6 +259,13 @@
       "type": "Multi",
       "command": true,
       "choices": [
+        {
+          "id": "0c9f6373-6cbe-4f00-8272-75abb92189e9",
+          "name": "Compile",
+          "type": "Macro",
+          "command": true,
+          "macroId": "021af284-ac1c-48cc-b2c2-8feaabfbb0d8"
+        },
         {
           "id": "24a59cbd-70db-4a9d-8b45-ae364015e38a",
           "name": "Cycle Pane Next",
@@ -789,6 +824,20 @@
           "type": "UserScript",
           "id": "c3756563-8c22-461d-9890-df6f2e8fd7c4",
           "path": "shore/quickadd/quick-jump-headings.js",
+          "settings": {}
+        }
+      ],
+      "runOnStartup": false
+    },
+    {
+      "name": "compile",
+      "id": "021af284-ac1c-48cc-b2c2-8feaabfbb0d8",
+      "commands": [
+        {
+          "name": "compile",
+          "type": "UserScript",
+          "id": "131018cb-7a89-4418-963d-cb523d924984",
+          "path": "shore/quickadd/compile.js",
           "settings": {}
         }
       ],
